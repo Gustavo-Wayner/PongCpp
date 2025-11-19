@@ -15,7 +15,7 @@ namespace gwe
 
         float Magnitude() { return Dot(*this, *this); }
 
-        Vector2 GetUnitVector() { return *this / Magnitude(); }
+        gwe::Vector2 GetUnitVector() { return *this / Magnitude(); }
 
         void Normalize() { *this /= Magnitude(); }
 
@@ -26,7 +26,7 @@ namespace gwe
         }
 
 #pragma region operator=
-        Vector2 &operator=(Vector2 &other)
+        Vector2 &operator=(Vector2 other)
         {
             this->x = other.x;
             this->y = other.y;
@@ -148,4 +148,25 @@ namespace gwe
     {
         return acos(Dot(vecA, vecB) / (vecA.Magnitude() * vecB.Magnitude()));
     }
+    void LimitMagnitude(Vector2 &vec, float max, float min = 0)
+    {
+        if (vec.Magnitude() > max)
+            vec.SetMagnitude(max);
+        else if (vec.Magnitude() < min)
+            vec.SetMagnitude(min);
+    }
+
+    struct Rectangle
+    {
+        float x, y;
+        float width, height;
+
+        Rectangle() = default;
+        Rectangle(float _x, float _y, float _width, float _height) : x(_x), y(_y), width(_width), height(_height) {}
+
+        float left() { return x; }
+        float right() { return x + width; }
+        float top() { return y; }
+        float bottom() { return y + height; }
+    };
 }
