@@ -6,19 +6,26 @@
 class GameObject
 {
 protected:
-    gwe::Vector2 Pos;
-    Color color;
-    gwe::Rectangle hitbox;
+    Vec2 Pos;
+    Rectangle hitbox;
 
 public:
+    Color color;
     void Draw()
     {
         DrawRectangle(hitbox.x + GetScreenWidth() * 0.5, hitbox.y + GetScreenHeight() * 0.5, hitbox.width, hitbox.height, color);
     }
 
-    gwe::Rectangle Hitbox()
+    Rectangle Hitbox() const
     {
         return hitbox;
+    }
+
+    virtual Vec2 getPosition() { return Pos; }
+
+    void DrawOrigin()
+    {
+        DrawCircle(Pos.x + GetScreenWidth() * 0.5, Pos.y + GetScreenHeight() * 0.5, 3.0, BLACK);
     }
 };
 
@@ -39,12 +46,22 @@ private:
             y = parent->Pos.y;
         }
 
-        operator gwe::Vector2() const
+        operator Vec2() const
         {
             return parent->Pos;
         }
 
-        Position &operator=(gwe::Vector2 other)
+        Position &operator=(Vec2 other)
+        {
+            parent->Pos = other;
+            x = parent->Pos.x;
+            y = parent->Pos.y;
+            parent->UpdateHitbox();
+
+            return *this;
+        }
+
+        Position &operator=(Position other)
         {
             parent->Pos = other;
             x = parent->Pos.x;
@@ -56,7 +73,8 @@ private:
 
         Position &operator*=(float &scalar)
         {
-            parent->Pos *= scalar;
+            parent->Pos.x *= scalar;
+            parent->Pos.y *= scalar;
             x = parent->Pos.x;
             y = parent->Pos.y;
             parent->UpdateHitbox();
@@ -65,25 +83,28 @@ private:
         }
         Position &operator/=(float scalar)
         {
-            parent->Pos /= scalar;
+            parent->Pos.x /= scalar;
+            parent->Pos.y /= scalar;
             x = parent->Pos.x;
             y = parent->Pos.y;
             parent->UpdateHitbox();
 
             return *this;
         }
-        Position &operator+=(gwe::Vector2 other)
+        Position &operator+=(Vec2 other)
         {
-            parent->Pos += other;
+            parent->Pos.x += other.x;
+            parent->Pos.y += other.y;
             x = parent->Pos.x;
             y = parent->Pos.y;
             parent->UpdateHitbox();
 
             return *this;
         }
-        Position &operator-=(gwe::Vector2 other)
+        Position &operator-=(Vec2 other)
         {
-            parent->Pos -= other;
+            parent->Pos.x -= other.x;
+            parent->Pos.y -= other.y;
             x = parent->Pos.x;
             y = parent->Pos.y;
             parent->UpdateHitbox();
@@ -91,12 +112,12 @@ private:
             return *this;
         }
 
-        gwe::Vector2 operator-(float other[2])
+        Vec2 operator-(float other[2])
         {
             return {this->x - other[0], this->y - other[1]};
         }
 
-        gwe::Vector2 operator-(gwe::Vector2 other)
+        Vec2 operator-(Vec2 other)
         {
             return {this->x - other.x, this->y - other.y};
         }
@@ -105,33 +126,15 @@ private:
 public:
     double Width, Height;
     Position position;
+    Vec2 velocity;
 
-    Rect(gwe::Vector2 _position, double _Width, double _Height, Color _color = {255, 255, 255, 255}) : Width(_Width), Height(_Height)
-    {
-        color = _color;
-        Pos = _position;
-        position = Position(this);
+    Rect(Vec2 _position, double _Width, double _Height, Color _color = {255, 255, 255, 255});
 
-        hitbox.x = position.x + Width * 0.5;
-        hitbox.y = position.y + Height * 0.5;
-        hitbox.height = Height;
-        hitbox.width = Width;
-    }
+    Rect(const Rect &other);
 
-    void UpdateHitbox()
-    {
-        hitbox.x = position.x - Width * 0.5;
-        hitbox.y = position.y - Height * 0.5;
-    }
+    void UpdateHitbox();
+    Vec2 getPosition() override;
+    Rect getNext();
 
-    Rect &operator=(const Rect &other)
-    {
-        Width = other.Width;
-        Height = other.Height;
-        color = other.color;
-        Pos = other.Pos;
-        hitbox = other.hitbox;
-        position = Position(this);
-        return *this;
-    }
+    Rect &operator=(const Rect &other);
 };

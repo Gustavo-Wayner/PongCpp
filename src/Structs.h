@@ -1,178 +1,146 @@
 #pragma once
 
+#include <raylib.h>
+#include <iostream>
 #include <cmath>
-#include "Objects.h"
 
-namespace gwe
+struct Vec2
 {
-    struct Vector2;
-    float Dot(Vector2 vecA, Vector2 vecB);
+    static float Dot(Vec2 vecA, Vec2 vecB);
+    static float Angle(Vec2 vecA, Vec2 vecB);
+    static void LimitMagnitude(Vec2 &vec, float max, float min = 0);
 
-    struct Vector2
-    {
-        float x;
-        float y;
-        Vector2() = default;
-        Vector2(float _x, float _y) : x(_x), y(_y) {}
-        Vector2(float arr[2]) : x(arr[0]), y(arr[1]) {}
+    float Magnitude();
+    Vec2 GetUnitVector();
+    void Normalize();
+    void SetMagnitude(float scalar);
 
-        float Magnitude() { return sqrt(Dot(*this, *this)); }
-
-        gwe::Vector2 GetUnitVector() { return *this / Magnitude(); }
-
-        void Normalize() { *this /= Magnitude(); }
-
-        void SetMagnitude(float scalar)
-        {
-            Normalize();
-            *this *= scalar;
-        }
+    float x;
+    float y;
+    Vec2() = default;
+    Vec2(float _x, float _y);
+    Vec2(float arr[2]);
 
 #pragma region operator=
-        Vector2 &operator=(Vector2 other)
-        {
-            this->x = other.x;
-            this->y = other.y;
+    Vec2 &operator=(Vec2 other)
+    {
+        this->x = other.x;
+        this->y = other.y;
 
-            return *this;
-        }
+        return *this;
+    }
 
-        Vector2 &operator=(float (&other)[2])
-        {
-            this->x = other[0];
-            this->y = other[1];
+    Vec2 &operator=(float (&other)[2])
+    {
+        this->x = other[0];
+        this->y = other[1];
 
-            return *this;
-        }
+        return *this;
+    }
 #pragma endregion
 
 #pragma region operator*
-        Vector2 operator*(float scalar)
-        {
-            return {this->x * scalar, this->y * scalar};
-        }
+    Vec2 operator*(float scalar)
+    {
+        return {this->x * scalar, this->y * scalar};
+    }
 
-        friend Vector2 operator*(float &scalar, Vector2 &vec)
-        {
-            return {vec.x * scalar, vec.y * scalar};
-        }
+    friend Vec2 operator*(float &scalar, Vec2 &vec)
+    {
+        return {vec.x * scalar, vec.y * scalar};
+    }
 
-        Vector2 &operator*=(float scalar)
-        {
-            this->x *= scalar;
-            this->y *= scalar;
+    Vec2 &operator*=(float scalar)
+    {
+        this->x *= scalar;
+        this->y *= scalar;
 
-            return *this;
-        }
+        return *this;
+    }
 #pragma endregion
 
 #pragma region operator/
-        Vector2 operator/(float scalar)
-        {
-            return {this->x / scalar, this->y / scalar};
-        }
+    Vec2 operator/(float scalar)
+    {
+        return {this->x / scalar, this->y / scalar};
+    }
 
-        friend Vector2 operator/(float scalar, Vector2 vec)
-        {
-            return {vec.x / scalar, vec.y / scalar};
-        }
+    friend Vec2 operator/(float scalar, Vec2 vec)
+    {
+        return {vec.x / scalar, vec.y / scalar};
+    }
 
-        Vector2 &operator/=(float scalar)
-        {
-            this->x /= scalar;
-            this->y /= scalar;
+    Vec2 &operator/=(float scalar)
+    {
+        this->x /= scalar;
+        this->y /= scalar;
 
-            return *this;
-        }
+        return *this;
+    }
 #pragma endregion
 
 #pragma region operator+
-        Vector2 operator+(float other[2])
-        {
-            return {this->x + other[0], this->y + other[1]};
-        }
+    Vec2 operator+(float other[2])
+    {
+        return {this->x + other[0], this->y + other[1]};
+    }
 
-        Vector2 operator+(Vector2 other)
-        {
-            return {this->x + other.x, this->y + other.y};
-        }
+    Vec2 operator+(Vec2 other)
+    {
+        return {this->x + other.x, this->y + other.y};
+    }
 
-        Vector2 &operator+=(Vector2 other)
-        {
-            this->x += other.x;
-            this->y += other.y;
+    Vec2 &operator+=(Vec2 other)
+    {
+        this->x += other.x;
+        this->y += other.y;
 
-            return *this;
-        }
+        return *this;
+    }
 
-        Vector2 &operator+=(float other[2])
-        {
-            this->x += other[0];
-            this->y += other[1];
+    Vec2 &operator+=(float other[2])
+    {
+        this->x += other[0];
+        this->y += other[1];
 
-            return *this;
-        }
+        return *this;
+    }
 #pragma endregion
 
-#pragma region operator-
-        Vector2 operator-(float other[2])
-        {
-            return {this->x - other[0], this->y - other[1]};
-        }
+#pragma region operator -
+    Vec2 operator-(float other[2])
+    {
+        return {this->x - other[0], this->y - other[1]};
+    }
 
-        Vector2 operator-(Vector2 other)
-        {
-            return {this->x - other.x, this->y - other.y};
-        }
+    Vec2 operator-(Vec2 other)
+    {
+        return {this->x - other.x, this->y - other.y};
+    }
 
-        Vector2 &operator-=(Vector2 other)
-        {
-            this->x -= other.x;
-            this->y -= other.y;
+    Vec2 &operator-=(Vec2 other)
+    {
+        this->x -= other.x;
+        this->y -= other.y;
 
-            return *this;
-        }
+        return *this;
+    }
 
-        Vector2 &operator-=(float other[2])
-        {
-            this->x -= other[0];
-            this->y -= other[1];
+    Vec2 &operator-=(float other[2])
+    {
+        this->x -= other[0];
+        this->y -= other[1];
 
-            return *this;
-        }
+        return *this;
+    }
 #pragma endregion
-    };
+};
 
-    inline float Dot(gwe::Vector2 vecA, gwe::Vector2 vecB)
-    {
-        return vecA.x * vecB.x + vecA.y * vecB.y;
-    }
-    inline float Angle(gwe::Vector2 vecA, gwe::Vector2 vecB)
-    {
-        return acos(Dot(vecA, vecB) / (vecA.Magnitude() * vecB.Magnitude()));
-    }
-    inline void LimitMagnitude(Vector2 &vec, float max, float min = 0)
-    {
-        if (vec.Magnitude() > max)
-            vec.SetMagnitude(max);
-        else if (vec.Magnitude() < min)
-            vec.SetMagnitude(min);
-    }
+inline int sign(float num) { return ((num > 1) - (num < 1)); }
+inline float absolute(float num) { return num * sign(num); }
 
-    struct Rectangle
-    {
-        float x, y;
-        float width, height;
-
-        Rectangle() = default;
-        Rectangle(float _x, float _y, float _width, float _height) : x(_x), y(_y), width(_width), height(_height) {}
-
-        float left() { return x; }
-        float right() { return x + width; }
-        float top() { return y; }
-        float bottom() { return y + height; }
-    };
-
-    inline int sign(float num) { return ((num > 1) - (num < 1)); }
-    inline float abs(float num) { return num * sign(num); }
-}
+enum Space
+{
+    ScreenSpace,
+    WorldSpace
+};
