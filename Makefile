@@ -51,6 +51,7 @@ LDFLAGS := -L$(RAYLIB_LIB_DIR)
 
 ifeq ($(PLATFORM),WINDOWS)
     LDLIBS := -lraylib -lopengl32 -lgdi32 -lwinmm
+    SUBSYSTEM=-Wl,-subsystem,windows
 endif
 
 ifeq ($(PLATFORM),LINUX)
@@ -71,7 +72,7 @@ all: $(TARGET)
 # Links in build/game(.exe)
 $(TARGET): $(OBJS)
 	@$(MKDIR)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS) $(SUBSYSTEM)
 
 # Compiles any .cpp from src/ to build/
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

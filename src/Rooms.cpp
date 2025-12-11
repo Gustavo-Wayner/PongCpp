@@ -145,6 +145,14 @@ void Game::Step()
         break;
 
     case State::Paused:
+        ClearBackground(BackgroundColor);
+        ball.Draw();
+        other.Draw();
+        player.Draw();
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), {0, 0, 0, 100});
+
+        DrawText(TextFormat("%d : %d\n", player_score, other_score), 450, 10, 21, BLACK);
+
         if (GuiButton({GetScreenWidth() * 0.5f - 120, GetScreenHeight() * 0.5f - 30 - 50, 240, 60}, "Resume"))
         {
             state = State::Unpaused;
