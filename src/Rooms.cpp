@@ -57,7 +57,7 @@ Game::Game() : player(Vec2{0, 0}, 0, 0), other(Vec2{0, 0}, 0, 0), ball(Vec2{0, 0
 void Game::Setup()
 {
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
-    BackgroundColor = {50, 100, 150, 255};
+    BackgroundColor = {70, 110, 180, 255};
     increment = 1.5f;
     ballMaxSpeed = 20;
     difficulty = 7;

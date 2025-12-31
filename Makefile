@@ -16,7 +16,7 @@ RAYLIB_INC     := raylib/src
 RAYLIB_EXT     := raylib/src/external
 RAYLIB_LIB_DIR := raylib/src
 
-CXXFLAGS := -std=c++17 -Wall -Wextra -O2 -I$(RAYLIB_INC) -I$(RAYLIB_EXT) -Wno-missing-field-initializers -Wno-unused-parameter
+CXXFLAGS := -std=c++11 -Wall -Wextra -O2 -I$(RAYLIB_INC) -I$(RAYLIB_EXT) -Wno-missing-field-initializers -Wno-unused-parameter
 
 # ===========================
 # Platform / commands
