@@ -120,6 +120,7 @@ void Game::Step()
         if (absolute(ball.position.y) + ball.Height > absolute(float(ScreenHeight * 0.5)))
         {
             ball.velocity.y = -ball.velocity.y;
+            ball.position.y = sign(ScreenHeight * 0.5);
         }
         if (absolute(ball.position.x) > absolute(float(ScreenWidth * 0.5)))
         {
